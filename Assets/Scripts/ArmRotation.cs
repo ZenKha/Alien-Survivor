@@ -16,27 +16,21 @@ public class ArmRotation : MonoBehaviour
     }
     void Update()
     {
-        Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - arm.transform.position;
         difference.Normalize();
         float rotation = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-        Debug.Log(rotation);
         if (Mathf.Abs(rotation) > 90 && facingRight)
         {
             controller.Flip();
-            FlipRotationOffset();
+            rotationOffset *= -1;
             facingRight = false;
         }
         if (Mathf.Abs(rotation) < 90 && !facingRight)
         {
             controller.Flip();
-            FlipRotationOffset();
+            rotationOffset *= -1;
             facingRight = true;
         }
         arm.transform.rotation = Quaternion.Euler(0f, 0f, rotation + rotationOffset);
-    }
-
-    public void FlipRotationOffset()
-    {
-        rotationOffset += 180;
     }
 }

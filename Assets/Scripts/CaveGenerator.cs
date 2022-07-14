@@ -8,23 +8,26 @@ public class CaveGenerator : MonoBehaviour
     [Header("Map Generation")]
     public int width;
     public int height;
-    [SerializeField] private float seed;
+    [SerializeField] float seed;
 
     [Header("Cave Generation")]
     [Range(0, 100)]
-    [SerializeField] private int randomFillPercent;
-    [SerializeField] private int smoothAmmount;
+    [SerializeField] int randomFillPercent;
+    [SerializeField] int smoothAmmount;
+
+    [Header("Tilemaps")]
+    [SerializeField] Tilemap CaveTilemap;
+    [SerializeField] Tilemap BackgroundTilemap;
+    [SerializeField] Tilemap DecorTilemap;
 
     [Header("Tiles")]
-    [SerializeField] private Tilemap CaveTilemap;
-    [SerializeField] private Tilemap BackgroundTilemap;
-    [SerializeField] private Tilemap DecorTilemap;
-    [SerializeField] private TileBase CaveTile;
-    [SerializeField] private TileBase BackgroundTile;
-    [SerializeField] private TileBase BorderTile;
-    [SerializeField] private TileBase PlatformTile;
-    [SerializeField] private TileBase[] CeilingDecor;
-    [SerializeField] private TileBase[] FloorDecor;
+    [SerializeField] TileBase CaveTile;
+    [SerializeField] TileBase BackgroundTile;
+    [SerializeField] TileBase BorderTile;
+    [SerializeField] TileBase PlatformTile;
+    [SerializeField] TileBase[] OreTiles;
+    [SerializeField] TileBase[] CeilingDecor;
+    [SerializeField] TileBase[] FloorDecor;
 
     private int[,] map;
 
@@ -32,12 +35,7 @@ public class CaveGenerator : MonoBehaviour
     {
         GenerateMap();
     }
-
-    void Update()
-    {
-          
-    }
-
+    
     void GenerateMap()
     {
         ClearTiles();

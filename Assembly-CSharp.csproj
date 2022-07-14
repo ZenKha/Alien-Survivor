@@ -60,11 +60,15 @@
     <Compile Include="Assets\Scripts\CaveGenerator.cs" />
     <Compile Include="Assets\Scripts\PlayerTeleporter.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\Sound.cs" />
+    <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\MiningController.cs" />
     <Compile Include="Assets\Scripts\CharacterController2D.cs" />
+    <Compile Include="Assets\Scripts\CustomAdvancedRuleTile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Cave Platformer Tileset\readme.txt" />
-    <None Include="Assets\ChonkyPixel\Assets\Documentation\Tilesheet Converter README.txt" />
+    <None Include="Assets\Sounds\ShootingSound\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

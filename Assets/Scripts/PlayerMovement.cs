@@ -14,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     float horizontalMove = 0;
     bool jump = false;
 
-
     void Update()
     {
         horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
@@ -32,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     {
         animator.SetBool("IsJumping", false);
     }
+
     void FixedUpdate()
     {
         controller.Move(horizontalMove * Time.fixedDeltaTime, jump);

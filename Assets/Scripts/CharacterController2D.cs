@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,6 +16,12 @@ public class CharacterController2D : MonoBehaviour
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 	private Vector3 m_Velocity = Vector3.zero;
+	AudioManager audioManager;
+	bool playingWalkSound = false;
+	bool playingJetpackStartup = false;
+	bool playingJetpackHover = false;
+	bool playedJetpackStartSound = false;
+	bool playedJetpackStopSound = false;
 
 	[Header("Events")]
 	[Space]
@@ -30,6 +37,11 @@ public class CharacterController2D : MonoBehaviour
 
 		if (OnLandEvent == null)
 			OnLandEvent = new UnityEvent();
+	}
+
+	void Start()
+	{
+		audioManager = FindObjectOfType<AudioManager>();
 	}
 
 	private void FixedUpdate()
@@ -62,24 +74,75 @@ public class CharacterController2D : MonoBehaviour
 			m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 		}
 		// If the player should jump...
-		if (jump && m_Rigidbody2D.velocity.y < 20)
+		if (jump)
 		{
-			// Add a vertical force to the player.
-			m_Grounded = true;
-			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
-			Debug.Log(m_Rigidbody2D.velocity);
+			m_Grounded = false;
+			if (m_Rigidbody2D.velocity.y < 20)
+            {
+				// Add a vertical force to the player.
+				m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+            }
+
+            if (!playedJetpackStartSound)
+            {
+				audioManager.Stop("JetpackStop");
+				playedJetpackStartSound = true;
+				playedJetpackStopSound = false;
+				StartCoroutine(PlayJetpackStartupSound());
+            }
+            else if(playedJetpackStartSound && !playingJetpackStartup && !playingJetpackHover)
+            {
+				playingJetpackHover = true;
+				audioManager.Play("JetpackHover");
+			}
+		}
+        else if (!m_Grounded && !jump)
+        {
+			audioManager.Stop("JetpackStartup");
+			audioManager.Stop("JetpackHover");
+			if (!playedJetpackStopSound && (playingJetpackStartup || playingJetpackHover))
+            {
+				playedJetpackStopSound = true;
+				audioManager.Play("JetpackStop");
+            }
+			playedJetpackStartSound = false;
+			playingJetpackHover = false;
+		}
+
+        if (m_Grounded && !playingWalkSound && move != 0)
+        {
+			StartCoroutine(PlayWalkingSound());
 		}
 	}
+	
+	IEnumerator PlayJetpackStartupSound()
+	{
+		playingJetpackStartup = true;
 
+		audioManager.Play("JetpackStartup");
+
+		yield return new WaitForSeconds(0.9f);
+
+		playingJetpackStartup = false;
+	}
+
+	IEnumerator PlayWalkingSound()
+	{
+		playingWalkSound = true;
+
+		int rand = Mathf.RoundToInt(Random.Range(1, 5));
+		audioManager.Play("RockWalk" + rand);
+
+		yield return new WaitForSeconds(0.3f);
+
+		playingWalkSound = false;
+	}
 
 	public void Flip()
 	{
 		// Switch the way the player is labelled as facing.
 		m_FacingRight = !m_FacingRight;
 
-		// Multiply the player's x local scale by -1.
-		Vector3 theScale = transform.localScale;
-		theScale.x *= -1;
-		transform.localScale = theScale;
+		transform.Rotate(0f, 180f, 0f);
 	}
 }
